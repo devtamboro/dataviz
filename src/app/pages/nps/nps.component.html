@@ -1,0 +1,29 @@
+
+<h1 style="text-align: center;">Dados da métrica NPS</h1>
+
+<mat-grid-list cols="3" rowHeight="15rem">
+    <mat-grid-tile>
+        <div class='rounded-background' style="background: rgba(231, 76, 60, 1)">
+            <span>0 <br> <p>Detratores</p></span>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <div class='rounded-background' style="background: rgba(255, 164, 46, 1)">
+            <span>5 <br> <p>Neutros</p></span>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <div class='rounded-background' style="background: rgba(23, 162, 184, 1)">
+            <span>2 <br> <p>Promotores</p></span>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>
+<div class='container'>
+    <canvas baseChart class="chart" id="chartjs"
+    [data]="doughnutChartBaseData"
+    [options]="doughnutChartBaseOptions"
+    [type]="'doughnut'"
+    >
+    </canvas>
+    <span class='percentage'>79% <br> <p style='margin-top: 2rem;'>Bom</p></span>
+</div>
