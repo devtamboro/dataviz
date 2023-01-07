@@ -6,49 +6,37 @@ import {
   ChartType,
 } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Nps, NpsResults } from 'src/app/models/nps';
+import { NpsService } from 'src/app/services/nps/nps.service';
 
+interface NpsData extends Nps {
+  npsAvarage: number
+}
 @Component({
   selector: 'app-nps',
   templateUrl: './nps.component.html',
   styleUrls: ['./nps.component.scss'],
 })
 export class NpsComponent implements OnInit {
+  npsData: NpsData
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   doughnutChartType: ChartType = 'doughnut';
-
   /* variables with word 'base' were used to mount nps graph, not to set the real NPS value */
-  doughnutChartBaseOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    cutout: '80%',
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    animation: {
-      onComplete: () => {
-              this.drawNeedle(150, -45 * Math.PI / 180);
-      }
-}
-  };
+  doughnutChartBaseOptions: ChartConfiguration<'doughnut'>['options']
 
   public doughnutChartBaseData: ChartData<'doughnut'> = {
     labels: ['Péssimo', 'Médio', 'Bom', 'Ótimo'],
     datasets: [
       {
-        rotation: -90,
+        rotation: 270,
         circumference: 180,
-        data: [40, 25, 15, 20],
+        data: [50, 25, 25],
         backgroundColor: [
           'rgba(231, 76, 60, 1)',
           'rgba(255, 164, 46, 1)',
           'rgba(46, 204, 113, 1)',
-          'rgba(23, 162, 184, 1)',
         ],
         borderColor: [
-          'rgba(255, 255, 255 ,1)',
           'rgba(255, 255, 255 ,1)',
           'rgba(255, 255, 255 ,1)',
           'rgba(255, 255, 255 ,1)',
@@ -62,17 +50,15 @@ export class NpsComponent implements OnInit {
     labels: ['', '', '', 'Ótimo'],
     datasets: [
       {
-        rotation: -90,
+        rotation: 270,
         circumference: 180,
-        data: [40, 25, 15, 20],
+        data: [40, 25,  25],
         backgroundColor: [
           'rgba(231, 76, 60, 1)',
           'rgba(255, 164, 46, 1)',
           'rgba(46, 204, 113, 1)',
-          'rgba(23, 162, 184, 1)',
         ],
         borderColor: [
-          'rgba(255, 255, 255 ,1)',
           'rgba(255, 255, 255 ,1)',
           'rgba(255, 255, 255 ,1)',
           'rgba(255, 255, 255 ,1)',
@@ -81,6 +67,21 @@ export class NpsComponent implements OnInit {
       },
     ],
   };
+
+  get formattedAvarage() {
+    return Math.round(this.npsData.npsAvarage * 100)
+  }
+
+  get avarageMessage() {
+    const roundedScoreAvarage = this.npsData.npsAvarage * 10
+    if(roundedScoreAvarage <= 5) {
+      return 'Ruim'
+    } else if (roundedScoreAvarage >5 && roundedScoreAvarage <=7.5) {
+      return 'Neutro'
+    }else {
+      return 'Ótimo'
+    }
+  }
 
   drawNeedle(radius, radianAngle) {
     var canvas = document.getElementById("chartjs") as HTMLCanvasElement;
@@ -105,7 +106,55 @@ export class NpsComponent implements OnInit {
     ctx.fill();
 }
 
-  constructor() {}
+  constructor(
+    private npsService: NpsService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getNpsData()
+  }
+
+  getNpsAvarage(npsResults: NpsResults[], npsTotal: number):number {
+    /* nps[{objKeys[objKeys.length - 1]] means user result which is the last key in those objs */
+    return (npsResults.reduce((npsAcumulator, npsIndex) => {
+      const objKeys = Object.keys(npsIndex);
+      /* there's null values inside npsResults */
+      const npsValue = isNaN(Number(npsIndex[`${objKeys[objKeys.length - 2]}`])) ? 0 : Number(npsIndex[`${objKeys[objKeys.length - 2]}`])
+      return npsAcumulator + npsValue
+    }, 0) / npsTotal)
+  }
+
+  getNpsData() {
+    this.npsService.getNpsData().subscribe(nps => {
+      /* max score is 10, so it is necessary to change scale to 100 */
+      const npsAvarage = this.getNpsAvarage(nps.npsResults, nps.total) / 10
+      this.npsData = {
+        ...nps,
+        npsAvarage
+      }
+
+      const formattedPercentage = npsAvarage * 100
+
+      debugger
+      this.doughnutChartBaseOptions = {
+        responsive: true,
+        cutout: `80%`,
+        rotation: 1 * Math.PI,
+        circumference: 1 * Math.PI,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        animation: {
+          onComplete: () => {
+                  this.drawNeedle(-90, Math.round(180 * npsAvarage) * Math.PI / 180);
+          }
+        }
+      };
+    }, error => {
+
+    })
+    
+  }
 }

@@ -4,26 +4,26 @@
 <mat-grid-list cols="3" rowHeight="15rem">
     <mat-grid-tile>
         <div class='rounded-background' style="background: rgba(231, 76, 60, 1)">
-            <span>0 <br> <p>Detratores</p></span>
+            <span>{{npsData.detractorsUsers}} <br> <p>Detratores</p></span>
         </div>
     </mat-grid-tile>
     <mat-grid-tile>
         <div class='rounded-background' style="background: rgba(255, 164, 46, 1)">
-            <span>5 <br> <p>Neutros</p></span>
+            <span>{{npsData.neutralUsers}}  <br> <p>Neutros</p></span>
         </div>
     </mat-grid-tile>
     <mat-grid-tile>
-        <div class='rounded-background' style="background: rgba(23, 162, 184, 1)">
-            <span>2 <br> <p>Promotores</p></span>
+        <div class='rounded-background' style="background: rgba(46, 204, 113, 1)">
+            <span>{{npsData.promotersUsers}}  <br> <p>Promotores</p></span>
         </div>
     </mat-grid-tile>
 </mat-grid-list>
-<div class='container'>
+<div class='container' *ngIf="npsData && doughnutChartBaseOptions">
     <canvas baseChart class="chart" id="chartjs"
     [data]="doughnutChartBaseData"
     [options]="doughnutChartBaseOptions"
     [type]="'doughnut'"
     >
     </canvas>
-    <span class='percentage'>79% <br> <p style='margin-top: 2rem;'>Bom</p></span>
+    <span class='percentage'>{{formattedAvarage}}% <br> <p style='margin-top: 2rem;'>{{avarageMessage}}</p></span>
 </div>
