@@ -133,9 +133,6 @@ export class NpsComponent implements OnInit {
         npsAvarage
       }
 
-      const formattedPercentage = npsAvarage * 100
-
-      debugger
       this.doughnutChartBaseOptions = {
         responsive: true,
         cutout: `80%`,
@@ -152,6 +149,7 @@ export class NpsComponent implements OnInit {
           }
         }
       };
+      this.chart.update()
     }, error => {
 
     })
