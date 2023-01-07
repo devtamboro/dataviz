@@ -5,6 +5,7 @@ import { PushRoutingModule } from './push-routing.module';
 import { PushComponent } from './push.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MatGridListModule } from '@angular/material/grid-list'
+import { MatCardModule } from '@angular/material/card'
 @NgModule({
   declarations: [
     PushComponent
@@ -14,6 +15,7 @@ import { MatGridListModule } from '@angular/material/grid-list'
     NgChartsModule,
     PushRoutingModule,
     MatGridListModule,
+    MatCardModule
   ]
 })
 export class PushModule { }

@@ -4,6 +4,8 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { ChartEvent } from 'chart.js/dist/core/core.plugins';
+import { PushService } from 'src/app/services/push/push.service';
+import { NotificationsResults } from 'src/app/models/push';
 
 @Component({
   selector: 'app-push',
@@ -12,7 +14,14 @@ import { ChartEvent } from 'chart.js/dist/core/core.plugins';
 })
 export class PushComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-  barChartOptions1: ChartConfiguration['options'] = {
+  notificationsLabels = []
+  notificationsValues = []
+  usersNotifiedLabels = []
+  usersNotifiedValues = []
+  notificationsResults: NotificationsResults
+  
+
+  notificationsBarChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     scales: {
       x: {},
@@ -33,7 +42,7 @@ export class PushComponent implements OnInit {
     },
   };
 
-  barChartOptions2: ChartConfiguration['options'] = {
+  usersNotifiedBarChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     scales: {
       x: {},
@@ -56,53 +65,47 @@ export class PushComponent implements OnInit {
 
   barChartType: ChartType = 'bar';
   barChartPlugins = [DataLabelsPlugin];
-  barChartData1: ChartData<'bar'> = {
-    labels: [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ],
-    datasets: [
-      {
-        data: [65, 59, 80, 120, 150, 200, 250, 250, 444, 200, 150, 111],
-        backgroundColor: Array(12).fill('#008000'),
-      },
-    ],
-  };
+  notificationsBarChart: ChartData<'bar'>
+  usersNotifiedBarChart
 
-  barChartData2: ChartData<'bar'> = {
-    labels: [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ],
-    datasets: [
-      {
-        data: [80, 60, 80, 350, 300, 400, 750, 750, 800, 200, 150, 111],
-        backgroundColor: Array(12).fill('#008000'),
-      },
-    ],
-  };
+  constructor(
+    private pushService: PushService
+  ) {}
 
-  constructor() {}
+  ngOnInit(): void {
+    this.getPushData()
+  }
 
-  ngOnInit(): void {}
+  getPushData(){
+    this.pushService.getNotificationsData().subscribe(data => {
+      this.notificationsResults = data.notificationsData
+      this.notificationsLabels = data.notificationsPerMonth.map(notifications => notifications.month)
+      this.notificationsValues = data.notificationsPerMonth.map(notifications => notifications.count)
+
+      this.usersNotifiedLabels = data.usersNotifiedPerMonth.map(notifications => notifications.month)
+      this.usersNotifiedValues = data.usersNotifiedPerMonth.map(notifications => notifications.count)
+      this.notificationsBarChart = {
+        labels: this.notificationsLabels,
+        datasets: [
+          {
+            data: this.notificationsValues,
+            backgroundColor: Array(12).fill('#008000'),
+          },
+        ],
+      };
+    
+      this.usersNotifiedBarChart = {
+        labels: this.usersNotifiedLabels,
+        datasets: [
+          {
+            data: this.notificationsValues,
+            backgroundColor: Array(12).fill('#008000'),
+          },
+        ],
+      };
+      this.chart.update()
+    }, error => {
+
+    })
+  }
 }

@@ -1,46 +1,55 @@
+<h1 style="text-align: center">Dados das notificações PUSH</h1>
+<div class='container results' *ngIf="notificationsResults !== null">
+    <div class='belt'>
+        <p class="push-paragraph">
+          {{notificationsResults?.users_which_didnt_started_any_course}}
+        </p>
+        <span
+          >Usuários que fizeram o primeiro login e não começaram nenhum
+          curso</span
+        >
+    </div>
+    <div class='belt'>
+        <p class="push-paragraph">
+          {{notificationsResults?.users_which_accepted_and_received_ntf}}
+        </p>
+        <span>Usuários que aceitaram e receberam notificações</span>
+    </div>
+    <div class='belt'>
+        <p class="push-paragraph">
+          {{notificationsResults?.users_which_started_courses_after_ntf}}
+        </p>
+        <span
+          >Usuários que receberam uma notificação e inicaram algum curso</span
+        >
+    </div>
+</div>
+<div class='container graph'>
+    <mat-card>
+        <mat-card-content>
+          <canvas
+            baseChart
+            class="chart"
+            [data]="notificationsBarChart"
+            [options]="notificationsBarChartOptions"
+            [plugins]="barChartPlugins"
+            [type]="barChartType"
+          >
+          </canvas>
+        </mat-card-content>
+    </mat-card>
+    <mat-card>
+        <mat-card-content>
+        <canvas
+            baseChart
+            class="chart"
+            [data]="usersNotifiedBarChart"
+            [options]="usersNotifiedBarChartOptions"
+            [plugins]="barChartPlugins"
+            [type]="barChartType"
+          >
+          </canvas>
+        </mat-card-content>
 
-<h1 style="text-align: center;">Dados das notificações PUSH</h1>
-
-<div class='container'>
-    <mat-grid-list cols="3" rowHeight="11rem">
-        <mat-grid-tile>
-            <div class='push-container'>
-                <p class='push-paragraph'>1818</p>
-                <span>Usuários que fizeram o primeiro login e não começaram nenhum curso</span>
-            </div>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <div class='push-container'>
-                <p class='push-paragraph'>598</p>
-                <span>Usuários que aceitaram e receberam notificações</span>
-            </div>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <div class='push-container'>
-                <p class='push-paragraph'>548</p>
-                <span>Usuários que receberam uma notificação e inicaram algum curso</span>
-            </div>
-        </mat-grid-tile>
-
-    </mat-grid-list>
-    <mat-grid-list cols="2">
-        <mat-grid-tile>
-            <canvas baseChart class="chart"
-                [data]="barChartData1"
-                [options]="barChartOptions1"
-                [plugins]="barChartPlugins"
-                [type]="barChartType"
-            >
-            </canvas>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <canvas baseChart class="chart"
-                [data]="barChartData2"
-                [options]="barChartOptions2"
-                [plugins]="barChartPlugins"
-                [type]="barChartType"
-            >
-            </canvas>
-        </mat-grid-tile>
-    </mat-grid-list>
+    </mat-card>
 </div>
