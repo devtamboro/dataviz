@@ -1,0 +1,43 @@
+<h1 style="text-align: center">Dados dos usuários em relação aos cursos</h1>
+<div class='container results' *ngIf="coursesResults !== null">
+    <div class='belt'>
+      <p class="push-paragraph">
+        {{coursesResults?.usersData.active_users}}
+      </p>
+      <span>Usuários ativos (completaram uma atividade nesse mês)</span
+      >
+    </div>
+    <div class='belt'>
+      <p class="push-paragraph">
+        {{coursesResults?.usersAndCourses.users_atleast_one_course}}
+      </p>
+      <span>Usuários que finalizaram (pelo menos) um curso</span
+      >
+    </div>
+    <div class='belt'>
+      <p class="push-paragraph">
+        {{coursesResults?.usersAndCourses.finished_courses}}
+      </p>
+      <span>Cursos finalizados</span>
+    </div>
+    <div class='belt'>
+      <p class="push-paragraph">
+        {{coursesResults?.usersAndCourses.progress_courses}}
+      </p>
+      <span
+        >Cursos em andamento</span
+      >
+    </div>
+</div>
+
+<div class='graph'>
+  <canvas
+    baseChart
+    class="chart"
+    [data]="coursesPieChart"
+    [options]="pieChartOptions"
+    [type]="pieChartType"
+    [plugins]="pieChartPlugins"
+  >
+  </canvas>
+</div>

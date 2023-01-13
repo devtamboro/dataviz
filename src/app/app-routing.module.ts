@@ -14,6 +14,10 @@ const routes: Routes = [
       {
         path: 'nps',
         loadChildren: () => import('src/app/pages/nps/nps.module').then(m => m.NpsModule)
+      },
+      {
+        path: 'cursos',
+        loadChildren: () => import('src/app/pages/courses/courses.module').then(m => m.CoursesModule)
       }
     ]
   }
