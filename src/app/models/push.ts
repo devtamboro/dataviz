@@ -1,6 +1,6 @@
-interface NotificationPerMonth {
-    month: String
-    year: String,
+import { YearDateFormat } from "./dateFormat";
+
+interface NotificationPerMonth extends YearDateFormat {
     count: String
 }
 
